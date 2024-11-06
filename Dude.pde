@@ -9,7 +9,10 @@ public class Dude {
   private int r = 0;  // colors
   private int g = 0;
   private int b = 0;
-  private float speed;
+  private float speed = 2 ;
+  private float slope = 2.0 * speed ;
+  private PVector vector = new PVector(speed, slope * speed);
+  /**     */  // dev comment
   // Constructor
   public Dude(boolean likesDudes, String shape, int size) {
     this.likesDudes = likesDudes;
@@ -17,63 +20,70 @@ public class Dude {
     this.size = size;
     this.shift = size/2;
   }
-  // set functions
+  // setter functions
   public void setColor(int r, int g, int b) {
     this.r = r;
     this.g = g;
     this.b = b;
   }
-  public void setAttraction(boolean likesDudes, Dude dudeOBJ, float speed) {
+  public void setAttraction(boolean likesDudes, Dude dudeOBJ) {
     this.likesDudes = likesDudes;
     this.otherDude = dudeOBJ;
-    this.speed = speed / 10.0;
+    //this.vector = new PVector(speed, slope * speed);
   }
-  // Get functions
+  // Getter functions
   public float getX() {
     return x;
   }
   public float getY() {
     return y;
   }
-
+  // Other Functions
   private void chase() {
     if (likesDudes) {
       float goX = otherDude.getX();
       float goY = otherDude.getY();
-      //double slope = (y- goY)/(x - goX);
-      //System.out.println(slope);
-      // UPNEXT make it so it goes on the most drict line to the OBJ
-      // x (1/slope)  y (slope)
-
       if ( x > goX) {      // incement X in chase direction
-        x -= 0.5;
+        x -= speed;
       } else if (x < goX) {
-        x += 0.5;
+        x += speed;
       }
-
       if ( y > goY) {      // incement Y in chase direction
-        y -= 0.5;
+        y -= speed;
       }
       if (y < goY) {
-        y += 0.5;
+        y += speed;
       }
     }
   }
-
   private void run() {
     if (! likesDudes) {
-      float slope = -1 * (2.0);
-      PVector position = new PVector(x,y);
-      PVector vector = new PVector(speed, slope * speed) ;
-       position.add(vector);
-       x = position.x;
-       y = position.y;
+      PVector position = new PVector(x, y);
+      vector = bounce(vector);  // if over 500
+      position.add(vector);
+
+      x = position.x;
+      y = position.y;
     }
   }
   
-  private float bounce(float location) {    // draft not tested 
-    // create bounce with vecotors
-    return 0.1;
+  private PVector alterCourse(PVector slopeVector){
+    // if runner is withing x of chaser { alter course }
+    // lilmit: only allow once every x frames.
+    
+    return slopeVector;
+  }
+
+  private PVector bounce(PVector slopeVector) {    // draft not tested
+    if (y > height - shift || y < 0 + shift ) {
+      slope = slope * - 1.0;
+      slopeVector = slopeVector.set(speed, slope);
+    }
+    if (x > width - shift || x < 0 + shift ) {
+      speed = speed * -1.0;
+      slopeVector = slopeVector.set(speed, slope);
+    }
+    return slopeVector;
   }
 
   private void drawShape() {
@@ -82,15 +92,16 @@ public class Dude {
       circle(x, y, size);
     } else if (shape.equals("triangle")) {
       triangle(x - shift, y + shift, x, y - shift / 1.3, x + shift, y + shift);
-      // triangle(bottom left, top middle, bottom right);  shift / 1.3 creats equalizes triangle
     } else if (shape.equals("rectangle")) {
       rect(x - size/2, y -  size/2, size, size);
     }
   }
 
   public void update() {
-    drawShape();
     chase();
     run();
+  }
+  public void show() {
+    drawShape();
   }
 }
