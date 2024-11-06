@@ -9,6 +9,7 @@ public class Dude {
   private int r = 0;  // colors
   private int g = 0;
   private int b = 0;
+  private float speed;
   // Constructor
   public Dude(boolean likesDudes, String shape, int size) {
     this.likesDudes = likesDudes;
@@ -22,9 +23,10 @@ public class Dude {
     this.g = g;
     this.b = b;
   }
-  public void setAttraction(boolean likesDudes, Dude dudeOBJ) {
+  public void setAttraction(boolean likesDudes, Dude dudeOBJ, float speed) {
     this.likesDudes = likesDudes;
     this.otherDude = dudeOBJ;
+    this.speed = speed / 10.0;
   }
   // Get functions
   public float getX() {
@@ -60,28 +62,18 @@ public class Dude {
 
   private void run() {
     if (! likesDudes) {
-      float avoidX = otherDude.getX();
-      float avoidY = otherDude.getY();
-
-      if (x > avoidX) {
-        x += 0.75;
-      } else if (x < avoidX) {
-        x -= 0.75;
-      }
-      if (y > avoidY) {
-        y += 0.75;
-      } else if (y < avoidY) {
-        y -= 0.75;
-      }
+      float slope = -1 * (2.0);
+      PVector position = new PVector(x,y);
+      PVector vector = new PVector(speed, slope * speed) ;
+       position.add(vector);
+       x = position.x;
+       y = position.y;
     }
   }
-  private float bounce(float value) {    // draft not tested 
-    if (value + shift > 500) {
-      value = 500 - shift;
-    } else if (value - shift < 0) {
-      value = 0 + shift;
-    }
-    return value;
+  
+  private float bounce(float location) {    // draft not tested 
+    // create bounce with vecotors
+    return 0.1;
   }
 
   private void drawShape() {
