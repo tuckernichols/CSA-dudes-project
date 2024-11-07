@@ -9,9 +9,9 @@ public class Dude {
   private int r = 0;  // colors
   private int g = 0;
   private int b = 0;
-  private float speed = 2 ;
-  private float slope = 2.0 * speed ;
-  private PVector vector = new PVector(speed, slope * speed);
+  private float speed;
+  private float slope;
+  private PVector vector;
   /**     */  // dev comment
   // Constructor
   public Dude(boolean likesDudes, String shape, int size) {
@@ -26,10 +26,12 @@ public class Dude {
     this.g = g;
     this.b = b;
   }
-  public void setAttraction(boolean likesDudes, Dude dudeOBJ) {
+  public void setAttraction(boolean likesDudes, Dude dudeOBJ, float speed) {
     this.likesDudes = likesDudes;
     this.otherDude = dudeOBJ;
-    //this.vector = new PVector(speed, slope * speed);
+    this.speed = 2 ;
+    this.slope = 2.0 * speed ;
+    this.vector = new PVector(speed, slope * speed);
   }
   // Getter functions
   public float getX() {
