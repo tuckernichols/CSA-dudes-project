@@ -29,9 +29,9 @@ public class Dude {
   public void setAttraction(boolean likesDudes, Dude dudeOBJ, float speed) {
     this.likesDudes = likesDudes;
     this.otherDude = dudeOBJ;
-    this.speed = 2 ;
-    this.slope = 2.0 * speed ;
-    this.vector = new PVector(speed, slope * speed);
+    this.speed = speed ;
+    this.slope = (float) ((Math.random() * 6) - 2) * speed;
+    this.vector = new PVector(speed, slope);
   }
   // Getter functions
   public float getX() {
