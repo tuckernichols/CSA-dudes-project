@@ -12,10 +12,8 @@ public class Dude {
   private float speed;
   private float slope;
   private PVector vector;
-  /**     */  // dev comment
   // Constructor
-  public Dude(boolean likesDudes, String shape, int size) {
-    this.likesDudes = likesDudes;
+  public Dude( String shape, int size) {
     this.shape = shape.toLowerCase();
     this.size = size;
     this.shift = size/2;
@@ -42,41 +40,43 @@ public class Dude {
   }
   // Other Functions
   private void chase() {
-    if (likesDudes) {
-      float goX = otherDude.getX();
-      float goY = otherDude.getY();
-      if ( x > goX) {      // incement X in chase direction
-        x -= speed;
-      } else if (x < goX) {
-        x += speed;
-      }
-      if ( y > goY) {      // incement Y in chase direction
-        y -= speed;
-      }
-      if (y < goY) {
-        y += speed;
-      }
+    float goX = otherDude.getX();
+    float goY = otherDude.getY();
+    if (isCollision()) {
+      otherDude.setColor( (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1);
+      setColor( (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1);
     }
-  }
-  private void run() {
-    if (! likesDudes) {
-      PVector position = new PVector(x, y);
-      vector = bounce(vector);  // if over 500
-      position.add(vector);
-
-      x = position.x;
-      y = position.y;
+    if ( x > goX) {      // incement X in chase direction
+      x -= speed;
+    } else if (x < goX) {
+      x += speed;
+    }
+    if ( y > goY) {      // incement Y in chase direction
+      y -= speed;
+    }
+    else if (y < goY) {
+      y += speed;
     }
   }
   
-  private PVector alterCourse(PVector slopeVector){
-    // if runner is withing x of chaser { alter course }
-    // lilmit: only allow once every x frames.
-    
-    return slopeVector;
+  private void run() {
+    PVector position = new PVector(x, y);
+    vector = bounce(vector);  // if over 500
+    position.add(vector);
+    x = position.x;
+    y = position.y;
   }
 
-  private PVector bounce(PVector slopeVector) {    // draft not tested
+  private boolean isCollision() {
+    boolean crossX = (Math.abs(x - otherDude.getX()) < 2 * shift);
+    boolean crossY = (Math.abs(y - otherDude.getY()) < 2 *shift);
+    if (crossX && crossY) {
+      return true;
+    }
+    return false;
+  }
+
+  private PVector bounce(PVector slopeVector) {
     if (y > height - shift || y < 0 + shift ) {
       slope = slope * - 1.0;
       slopeVector = slopeVector.set(speed, slope);
@@ -100,8 +100,11 @@ public class Dude {
   }
 
   public void update() {
-    chase();
-    run();
+    if (likesDudes) {
+      chase();
+    } else {
+      run();
+    }
   }
   public void show() {
     drawShape();
