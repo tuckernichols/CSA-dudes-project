@@ -10,12 +10,12 @@ void setup() {
   frameRate(30);
   dude1.setColor(231, 31, 31);
   dude2.setColor(20, 110, 200);
-  dude1.setAttraction(true, dude2, 3.0);
-  dude2.setAttraction(false, dude1, 4.0);
+  dude1.setAttraction(dude2, 3.0);
+  dude2.setAttraction(4.0);
 
-  dude3.setAttraction(false, dude4, 4.0);
-  dude4.setAttraction(true, dude3, 3.0);
-  dude5.setAttraction(true, dude4, 2.0);
+  dude3.setAttraction(4.0);
+  dude4.setAttraction(dude3, 3.0);
+  dude5.setAttraction(dude3, 2.0);
 }
 
 void draw() {
