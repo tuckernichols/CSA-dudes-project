@@ -1,40 +1,45 @@
 public class Dude {
-  private float x = (int) (Math.random() * 400) + 51;   // init location
-  private float y = (int) (Math.random() * 400) + 51;
-  private boolean likesDudes;
+  private float x = (int) (Math.random() * 400) + 51;   // Initial x location
+  private float y = (int) (Math.random() * 400) + 51;   // Initial y location
+  private boolean likesDudes;    // true -> chase
   private Dude otherDude;
   private String shape;
   private int size;
   private int shift;
-  private int r = 0;  // colors
+  private int r = 0;  // Color components
   private int g = 0;
   private int b = 0;
   private float speed;
   private float slope;
   private PVector vector;
+
   // Constructor
-  public Dude( String shape, int size) {
+  public Dude(String shape, int size) {
     this.shape = shape.toLowerCase();
     this.size = size;
-    this.shift = size/2;
+    this.shift = size / 2;
   }
-  // setter functions
+
+  // Setter methods
   public void setColor(int r, int g, int b) {
     this.r = r;
     this.g = g;
     this.b = b;
   }
-  public void setAttraction(boolean likesDudes, Dude dudeOBJ, float speed) {
+
+  public void setAttraction(boolean likesDudes, Dude otherDude, float speed) {
     this.likesDudes = likesDudes;
-    this.otherDude = dudeOBJ;
-    this.speed = speed ;
+    this.otherDude = otherDude;
+    this.speed = speed;
     this.slope = (float) ((Math.random() * 6) - 2) * speed;
     this.vector = new PVector(speed, slope);
   }
-  // Getter functions
+
+  // Getter methods
   public float getX() {
     return x;
   }
+
   public float getY() {
     return y;
   }
@@ -42,10 +47,12 @@ public class Dude {
   private void chase() {
     float goX = otherDude.getX();
     float goY = otherDude.getY();
+
     if (isCollision()) {
       setColor( (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1);
       drawShape((int) (Math.random() * 3));
     }
+
     if ( x > goX) {      // incement X in chase direction
       x -= speed;
     } else if (x < goX) {
@@ -60,10 +67,12 @@ public class Dude {
 
   private void run() {
     PVector position = new PVector(x, y);
-    vector = bounce(vector);  // if over 500
+    vector = bounce(vector);
     position.add(vector);
+
     x = position.x;
     y = position.y;
+
     if (isCollision()) {
       setColor((int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1);
       drawShape((int) (Math.random() * 3));
@@ -71,47 +80,46 @@ public class Dude {
   }
 
   private boolean isCollision() {
-    boolean crossX = (Math.abs(x - otherDude.getX()) < 2 * shift);
-    boolean crossY = (Math.abs(y - otherDude.getY()) < 2 *shift);
-    if (crossX && crossY) {
-      return true;
-    }
-    return false;
+    boolean collidesX = Math.abs(x - otherDude.getX()) < 2 * shift;
+    boolean collidesY = Math.abs(y - otherDude.getY()) < 2 * shift;
+    return collidesX && collidesY;
   }
 
   private PVector bounce(PVector slopeVector) {
-    if (y > height - shift || y < 0 + shift ) {
-      slope = slope * - 1.0;
-      slopeVector = slopeVector.set(speed, slope);
+    if (y > height - shift || y < shift) {
+      slope = -slope;
+      slopeVector.set(speed, slope);
     }
-    if (x > width - shift || x < 0 + shift ) {
-      speed = speed * -1.0;
-      slopeVector = slopeVector.set(speed, slope);
+    if (x > width - shift || x < shift) {
+      speed = -speed;
+      slopeVector.set(speed, slope);
     }
     return slopeVector;
   }
 
+
   private void drawShape() {
     fill(r, g, b);
-    if (shape.equals("circle")) {
+
+    if ("circle".equals(shape)) {
       circle(x, y, size);
-    } else if (shape.equals("triangle")) {
-      triangle(x - shift, y + shift, x, y - shift / 1.3, x + shift, y + shift);
-    } else if (shape.equals("rectangle")) {
-      rect(x - size/2, y -  size/2, size, size);
+    } else if ("triangle".equals(shape)) {
+      triangle(x - shift, y + shift, x, y - shift / 1.3f, x + shift, y + shift);
+    } else if ("rectangle".equals(shape)) {
+      rect(x - size / 2, y - size / 2, size, size);
     }
   }
 
-  private void drawShape(int shape) {
-    if (shape == 0) {
-      this.shape = "circle";
+  private void drawShape(int shapeIndex) {
+    if (shapeIndex == 0) {
+      shape = "circle";
       circle(x, y, size);
-    } else if (shape == 1) {
-      this.shape = "triangle";
-      triangle(x - shift, y + shift, x, y - shift / 1.3, x + shift, y + shift);
-    } else if (shape == 2) {
-      this.shape = "rectangle";
-      rect(x - size/2, y -  size/2, size, size);
+    } else if (shapeIndex == 1) {
+      shape = "triangle";
+      triangle(x - shift, y + shift, x, y - shift / 1.3f, x + shift, y + shift);
+    } else if (shapeIndex == 2) {
+      shape = "rectangle";
+      rect(x - size / 2, y - size / 2, size, size);
     }
   }
 
@@ -122,6 +130,7 @@ public class Dude {
       run();
     }
   }
+
   public void show() {
     drawShape();
   }
