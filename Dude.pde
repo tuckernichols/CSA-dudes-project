@@ -27,9 +27,16 @@ public class Dude {
     this.b = b;
   }
 
-  public void setAttraction(boolean likesDudes, Dude otherDude, float speed) {
-    this.likesDudes = likesDudes;
+  public void setAttraction(Dude otherDude, float speed) {
+    this.likesDudes = true;
     this.otherDude = otherDude;
+    this.speed = speed;
+    this.slope = (float) ((Math.random() * 6) - 2) * speed;
+    this.vector = new PVector(speed, slope);
+  }
+  
+  public void setAttraction(float speed) {
+    this.likesDudes = false;
     this.speed = speed;
     this.slope = (float) ((Math.random() * 6) - 2) * speed;
     this.vector = new PVector(speed, slope);
@@ -51,6 +58,9 @@ public class Dude {
     if (isCollision()) {
       setColor( (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1);
       drawShape((int) (Math.random() * 3));
+      otherDude.setColor( (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1);
+      otherDude.drawShape((int) (Math.random() * 3));
+      
     }
 
     if ( x > goX) {      // incement X in chase direction
@@ -72,11 +82,6 @@ public class Dude {
 
     x = position.x;
     y = position.y;
-
-    if (isCollision()) {
-      setColor((int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1, (int) (Math.random() * 255) + 1);
-      drawShape((int) (Math.random() * 3));
-    }
   }
 
   private boolean isCollision() {
@@ -88,13 +93,11 @@ public class Dude {
   private PVector bounce(PVector slopeVector) {
     if (y > height - shift || y < shift) {
       slope = -slope;
-      slopeVector.set(speed, slope);
     }
     if (x > width - shift || x < shift) {
       speed = -speed;
-      slopeVector.set(speed, slope);
     }
-    return slopeVector;
+    return  slopeVector.set(speed, slope);
   }
 
 
