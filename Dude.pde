@@ -24,6 +24,7 @@ public class Dude {
     this.g = g;
     this.b = b;
   }
+  
   public void setAttraction(boolean likesDudes, Dude dudeOBJ, float speed) {
     this.likesDudes = likesDudes;
     this.otherDude = dudeOBJ;
